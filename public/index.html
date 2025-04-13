@@ -1,32 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QRPass Register</title>
+  <meta charset="UTF-8">
+  <title>QRPass Registration</title>
+  <style>
+    body { font-family: Arial; padding: 30px; background: #f4f4f4; }
+    input, button { display: block; margin: 10px 0; padding: 10px; width: 300px; }
+    button { background: orange; color: white; border: none; cursor: pointer; }
+  </style>
 </head>
 <body>
-  <form action="/register" method="POST" onsubmit="submitForm(event)">
-    <input type="text" placeholder="Name" id="name" required><br>
-    <input type="email" placeholder="Email" id="email" required><br>
-    <input type="text" placeholder="Phone" id="phone" required><br>
-    <input type="number" placeholder="Amount" id="amount" required><br>
-    <button type="submit">Register</button>
-  </form>
+  <h2>Register & Pay</h2>
+  <input type="text" id="name" placeholder="Full Name" />
+  <input type="email" id="email" placeholder="Email" />
+  <input type="text" id="phone" placeholder="Phone Number" />
+  <input type="number" id="ticketCount" placeholder="Ticket Count (₹50 each)" />
+
+  <button onclick="pay()">Pay & Register</button>
+
   <script>
-    async function submitForm(event) {
-      event.preventDefault();
+    function pay() {
       const name = document.getElementById("name").value;
       const email = document.getElementById("email").value;
       const phone = document.getElementById("phone").value;
-      const amount = document.getElementById("amount").value;
+      const ticketCount = parseInt(document.getElementById("ticketCount").value) || 1;
+      const amount = ticketCount * 50;
 
-      const response = await fetch("/register", {
+      alert("Payment simulated for ₹" + amount);
+
+      fetch("/payment-success", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, phone, amount })
-      });
-      alert(await response.text());
+      })
+      .then(res => res.text())
+      .then(msg => alert(msg))
+      .catch(err => alert("Error: " + err));
     }
   </script>
 </body>
